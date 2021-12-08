@@ -34,6 +34,7 @@ void test_insert_single(const key_t key) {
   assert(p->right == NULL);
   assert(p->parent == NULL);
 #endif
+  
   delete_rbtree(t);
 }
 
@@ -60,14 +61,13 @@ void test_erase_root(const key_t key) {
   assert(p != NULL);
   assert(t->root == p);
   assert(p->key == key);
-
+printf("1-1\n");
   rbtree_erase(t, p);
 #ifdef SENTINEL
   assert(t->root == t->nil);
 #else
   assert(t->root == NULL);
 #endif
-
   delete_rbtree(t);
 }
 
@@ -138,6 +138,7 @@ void test_to_array(rbtree *t, const key_t *arr, const size_t n) {
   for (int i = 0; i < n; i++) {
     assert(arr[i] == res[i]);
   }
+  free(res);
 }
 
 void test_multi_instance() {
@@ -170,6 +171,8 @@ void test_multi_instance() {
 
   delete_rbtree(t2);
   delete_rbtree(t1);
+  free(res1);
+  free(res2);
 }
 
 // Search tree constraint
@@ -309,13 +312,21 @@ void test_to_array_suite() {
 
 int main(void) {
   test_init();
+  printf("1\n");
   test_insert_single(1024);
+  printf("2\n");
   test_find_single(512, 1024);
+  printf("3\n");
   test_erase_root(128);
+  printf("4\n");
   test_minmax_suite();
+  printf("5\n");
   test_to_array_suite();
+  printf("6\n");
   test_distinct_values();
+  printf("7\n");
   test_duplicate_values();
+  printf("8\n");
   test_multi_instance();
   printf("Passed all tests!\n");
 }
