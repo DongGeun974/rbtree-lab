@@ -203,40 +203,30 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   z->color = RBTREE_RED;
   insert_fixup(t, z);
   t->root->color = RBTREE_BLACK;
-
   return z;
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
   // TODO: implement find
-  if (t->root != t->nil)
+  node_t *x = t->root;
+  while (x != t->nil && key != x->key)
   {
-    node_t *target_node = t->root;
-    while(target_node->right != t->nil && target_node->left != t->nil)
+    if (key < x->key)
     {
-      if (target_node->key > key)
-      {
-        target_node = target_node->left;
-      }
-      else
-      {
-        target_node = target_node->right;
-      }
-    }
-
-    if (target_node->key == key)
-    {
-      return target_node;
+      x = x->left;
     }
     else
     {
-      return NULL;
+      x = x->right;
     }
   }
-  else
+
+  if (x->key == key)
   {
-    return NULL;
+    return x;
   }
+  return NULL;
+  
 }
 
 node_t *rbtree_min(const rbtree *t) {
@@ -277,7 +267,7 @@ void trans_plant(rbtree *t, node_t *u, node_t *v)
 }
 void erase_fixup(rbtree *t, node_t *x)
 {
-  while(x != t->nil && x->color == RBTREE_BLACK)
+  while(x != t->root && x->color == RBTREE_BLACK)
   {
     if (x == x->parent->left)
     {
@@ -429,7 +419,7 @@ void node_tree(rbtree *t,node_t *node , int tap)
 
     if (node != t->nil)
     {
-      printf("key : %d[%d], left : %d, right %d\n", node->key, node->color, node->left->key, node->right->key);      
+      printf("%p, key : %d[%d], left : %d, right %d\n", node , node->key, node->color, node->left->key, node->right->key);      
 
       if (node->right != t->nil)
       {
@@ -457,26 +447,3 @@ int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // node_tree(t, t->root, 0);
   return 0;
 }
-// 10, 5, 8, 34, 67, 23, 156, 24, 2, 12, 24, 36, 990, 25
-
-// int main(int argc, char *argv[]) {
-//     rbtree *t = new_rbtree();
-//   key_t entries[] = {10, 5, 8, 34, 67, 23, 156, 24, 2, 12, 24, 36, 990, 25};
-//   const size_t n = sizeof(entries) / sizeof(entries[0]);
-//   printf("1\n");
-//   for (int i = 0; i < n; i++)
-//   {
-//     rbtree_insert(t, entries[i]);
-//   }
-//   rbtree_to_array(t, entries, n);
-//   for (int i = 0; i <n; i++)
-//   {
-//       printf("%d ", entries[i]);
-//   }
-//   delete_rbtree(t);
-//   if (t == NULL)
-//   {
-//       printf("a");
-//   }
-//   return 0;
-// }
